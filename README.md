@@ -66,7 +66,7 @@ Once you are done working on your feature, you may go on to https://github.com/r
   ## Running the server
 
 - Don't forget to 'npm install' after cloning the project!
-- Make sure to have a .env file with the information in the *.env.example* file
+- Make sure to have a .env file with the information in the *.env.example* file. If at any point, your feature requires you to add a new env variable, be sure to include it in *.env.example* so that others can see and use it too
 
 - Command lines to start the server
   - To start server in development mode: 'npm run dev'
