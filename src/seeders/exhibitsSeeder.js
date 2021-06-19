@@ -1,7 +1,16 @@
+require("dotenv").config({ path: '../.env'});
+const express = require("express");
+const app = express();
+const port = process.env.PORT || 3000;
 const fs = require("fs");
 
+
+const dbSetup = require('../database/setup');
+
+dbSetup();
+
 //Load Exhibit Model
-const Exhibit = require('../models/exhibit');
+const { ExhibitModel } = require("../models/exhibit");
 
 
 //Read JSON files
@@ -12,7 +21,7 @@ const exhibits = JSON.parse(
 //Import data into DB
 const importData = async () => {
     try {
-        await Exhibit.create(exhibits);
+        await ExhibitModel.create(exhibits);
         console.log("Data imported");
         process.exit();
     } catch (err) {
@@ -21,9 +30,12 @@ const importData = async () => {
 };
 
 
-if (process.arg[2] === "-i") {
+if (process.argv[2] === "-i") {
     importData().then();
-} else {
-    console.error(err);
-}
+};
+
+app.listen(port, () => {
+  console.log(`Server is listening on port: ${port}`);
+});
+
    
