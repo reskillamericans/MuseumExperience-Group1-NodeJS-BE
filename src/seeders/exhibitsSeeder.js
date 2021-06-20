@@ -12,11 +12,11 @@ const { ExhibitModel } = require("../models/exhibit");
 
 //Read JSON files
 const exhibits = JSON.parse(
-    fs.readFileSync('../seeders/exhibits.json', "utf-8")
+    fs.readFileSync('./exhibits.json', "utf-8")
 );
 
 //Import data into DB
-const importData = async () => {
+exports.importData = async () => {
     try {
         await ExhibitModel.create(exhibits);
         console.log("Data imported");
@@ -33,4 +33,3 @@ if (process.argv[2] === "-i") {
 
 
 
-   
