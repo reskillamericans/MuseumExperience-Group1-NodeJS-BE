@@ -1,7 +1,4 @@
 require("dotenv").config({ path: '../.env'});
-const express = require("express");
-const app = express();
-const port = process.env.PORT || 3000;
 const fs = require("fs");
 
 
@@ -34,8 +31,6 @@ if (process.argv[2] === "-i") {
     importData().then();
 };
 
-app.listen(port, () => {
-  console.log(`Server is listening on port: ${port}`);
-});
+
 
    
