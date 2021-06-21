@@ -4,9 +4,13 @@ exports.fetchExhibits = async (req, res) => {
   try {
     let filter = {};
 
-    if (req.query.name) filter.name = req.query.name;
+    if (req.query.name) filter = { name: new RegExp(req.query.name, "i") };
+
+    if (req.query.category) filter = { category: req.query.category };
 
     let query = await ExhibitModel.find(filter).exec();
+
+    if (query.length === 0) return res.status(200).json({ message: "No results found." });
 
     return res.status(200).json({ query });
   } catch (err) {
