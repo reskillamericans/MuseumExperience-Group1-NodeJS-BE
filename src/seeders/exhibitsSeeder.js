@@ -1,5 +1,6 @@
 require("dotenv").config({ path: '../../.env'});
 const fs = require("fs");
+const path = require('path');
 
 
 const dbSetup = require('../database/setup');
@@ -12,7 +13,7 @@ const { ExhibitModel } = require("../models/exhibit");
 
 //Read JSON files
 const exhibits = JSON.parse(
-    fs.readFileSync('./exhibits.json', "utf-8")
+    fs.readFileSync(`${__dirname}/exhibits.json`, "utf-8")
 );
 
 //Import data into DB
