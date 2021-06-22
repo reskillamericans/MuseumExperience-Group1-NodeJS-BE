@@ -26,7 +26,7 @@ exports.importData = async () => {
         } else {
             await ExhibitModel.create(exhibits);
             console.log("Data imported");
-            process.exit();
+            return;
         }
     } catch (err) {
         console.error(err);
