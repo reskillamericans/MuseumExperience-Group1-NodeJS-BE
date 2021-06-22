@@ -4,11 +4,11 @@ exports.fetchExhibits = async (req, res) => {
   try {
     let filter = {};
 
-    if (req.query.name) filter = { name: new RegExp(req.query.name, "i") };
+    if (req.query.name) filter.name = new RegExp(req.query.name, "i");
 
-    if (req.query.category) filter = { category: req.query.category };
+    if (req.query.category) filter.category = req.query.category;
 
-    let query = await ExhibitModel.find(filter).exec();
+    let query = await ExhibitModel.find(filter);
 
     if (query.length === 0) return res.status(200).json({ message: "No results found." });
 
@@ -21,7 +21,7 @@ exports.fetchExhibits = async (req, res) => {
 
 exports.fetchSingleExhibit = async (req, res) => {
   try {
-    let query = await ExhibitModel.findById(req.params.id).exec();
+    let query = await ExhibitModel.findById(req.params.id);
 
     if (!query) return res.status(404).json({ message: `Exhibit not found.` });
 
