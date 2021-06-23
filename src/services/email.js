@@ -1,7 +1,3 @@
-//Create a utilities or services folder. 
-//Create a function with 4 param 
-//Keep functionality the same though. Keep .env file. 
-
 require("dotenv").config(); 
 
 const nodemailer = require('nodemailer');
@@ -47,3 +43,5 @@ function sendEmail(to, subject, text){
 
         });
 }
+
+exports.sendEmail = sendEmail;
