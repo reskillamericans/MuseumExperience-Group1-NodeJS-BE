@@ -31,7 +31,6 @@ exports.importData = async () => {
     } catch (err) {
         console.error(err);
     }
-
 };
 
 
