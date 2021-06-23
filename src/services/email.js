@@ -1,15 +1,3 @@
-require("dotenv").config(); 
-
-const nodemailer = require('nodemailer');
-const bodyParser = require("body-parser");
-const app = express()
-
-
-//BodyParser
-app.use(bodyParser.urlencoded({ extended: false }))
-app.use(bodyParser.json())
-
-
 function sendEmail(to, subject, text){
 
     // CREATE A TRANSPORTER
