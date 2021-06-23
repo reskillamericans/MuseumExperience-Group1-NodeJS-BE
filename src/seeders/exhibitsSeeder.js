@@ -12,15 +12,21 @@ const { ExhibitModel } = require("../models/exhibit");
 //Read JSON files
 const exhibits = JSON.parse(fs.readFileSync(`${__dirname}/exhibits.json`, "utf-8"));
 
+
 //Import data into DB
 exports.importData = async () => {
-  try {
-    await ExhibitModel.create(exhibits);
-    console.log("Data imported");
-    process.exit();
-  } catch (err) {
-    console.error(err);
-  }
+   try {
+        const foundExhibits = await ExhibitModel.find();
+        if (foundExhibits) {
+           console.log("Data exists"); 
+        } else {
+            await ExhibitModel.create(exhibits);
+            console.log("Data imported");
+            return;
+        }
+    } catch (err) {
+        console.error(err);
+    }
 };
 
 if (process.argv[2] === "-i") {
