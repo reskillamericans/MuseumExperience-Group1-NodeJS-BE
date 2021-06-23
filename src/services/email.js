@@ -27,8 +27,7 @@ function sendEmail(to, subject, text){
     // TODO: Prior to deployment, remove the current "to" reference to the env variable and use the value passed into the procedure(the commented code).  
     let mailOptions = {
         from: process.env.FROM,
-        to: process.env.TO,
-        //to: to,
+        to: to,
         subject: subject,
         text: text
         }
