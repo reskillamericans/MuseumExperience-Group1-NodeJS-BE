@@ -5,7 +5,6 @@
 require("dotenv").config(); 
 
 const nodemailer = require('nodemailer');
-const express = require('express');
 const bodyParser = require("body-parser");
 const app = express()
 
@@ -15,10 +14,10 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 
-function sendEmail(from, to, subject, text){
+function sendEmail(to, subject, text){
 
     // CREATE A TRANSPORTER
-    // TODO: Update with actual email address if this is ever used in a production env. 
+    // TODO: Update with correct transporter inforaiton if this is ever used in a production env. 
     let transporter = nodemailer.createTransport({
         host: process.env.HOST,
         port: process.env.PORT,
@@ -30,7 +29,7 @@ function sendEmail(from, to, subject, text){
 
     //CONSTRUCT EMAIL
     let mailOptions = {
-        from: from,
+        from: process.env.FROM,
         to: to,
         subject: subject,
         text: text
@@ -38,12 +37,6 @@ function sendEmail(from, to, subject, text){
 
         transporter.sendMail(mailOptions, function(err, data){
             if(err) {
-                console.log( "HOST", process.env.HOST)
-                console.log( "PASS", process.env.PASS) 
-                console.log( "USER", process.env.USER)
-                console.log( "PORT", process.env.PORT)
-
-
                 console.log("ERROR ERROR ERROR:", err);
             } else {
                 console.log("SUCCESS!");
