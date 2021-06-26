@@ -14,7 +14,8 @@ const questionSchema = new Schema({
   answer: String,
   status: {
     type: String,
-    enum: ['pending', 'answered', 'published']
+    enum: ['pending', 'answered', 'published'],
+    default: pending
   }
 });
 
