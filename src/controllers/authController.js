@@ -45,7 +45,7 @@ exports.newUserSignup = (req, res) => {
                             if (err) {
                                 return res.status(500).json({ err });
                             }
-                            return res.status(200).json({ message: 'User registration successful!', token });
+                            return res.status(200).json({ message: 'User signup successful!', token });
                         })
                     })
                 })
