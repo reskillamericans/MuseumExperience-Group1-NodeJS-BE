@@ -3,6 +3,7 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 const { exhibitRoutes } = require("./routes/exhibitRoutes");
+const authRoutes = require('./routes/authRoutes');
 
 //Middleware
 app.use(express.json());
@@ -19,6 +20,7 @@ dbSetup();
 // Routes
 //==================================================
 app.use(exhibitRoutes);
+app.use('/auth', authRoutes);
 
 //==================================================
 // Seeders

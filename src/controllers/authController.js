@@ -1,10 +1,10 @@
 const User = require('../models/users');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const secret = AUTHENTICATION_SECRET;
+const secret = 'AUTHENTICATION_SECRET';
 const expiry = 3600;
 
-exports.userSignup = (req, res, next) => {
+exports.newUserSignup = (req, res) => {
     User.findOne({ email: req.body.email }, (err, existingUser) => {
         if (err) {
             return res.status(500).json({ err });
@@ -32,24 +32,22 @@ exports.userSignup = (req, res, next) => {
                         return res.status(500).json({ err });
                     }
                     newUser.password = hashedPassword;
-                    newUser.save(err, savedUser) => {
+                    newUser.save((err, savedUser) => {
                         if (err) {
                             return res.status(500).json({ err });
                         }
 
                         jwt.sign({
                             id: newUser._id,
-                            firstName: newUser.firstName,
-                            lastName: newUser.lastName,
                             email: newUser.email,
-                            dateOfBirth: newUser.dateOfBirth
+                            role: newUser.role
                         }, secret, {expiresIn: expiry}, (err, token) => {
                             if (err) {
                                 return res.status(500).json({ err });
                             }
                             return res.status(200).json({ message: 'User registration successful!', token });
                         })
-                    }
+                    })
                 })
             })
         })
