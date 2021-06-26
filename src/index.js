@@ -1,38 +1,27 @@
-require("dotenv").config({ path: '../.env'});
-const express = require("express");
+require("dotenv").config({ path: '../.env' });
+const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
-const { exhibitRoutes } = require("./routes/exhibitRoutes");
+const { questionsRoutes } = require('./routes/questionsRoutes')
+const Question = require('../models/questions')
 
-
-//Middleware
+//middleware
 app.use(express.json());
+app.use(questionsRoutes);
 app.use(express.urlencoded({ extended: true }));
 
-//==================================================
-// DATABASE
-//==================================================
-const dbSetup = require("./database/setup");
-
+//db setup
+const dbSetup = require('./database/setup');
 dbSetup();
-
-//==================================================
-// Routes
-//==================================================
-app.use(exhibitRoutes);
-
-//==================================================
-// Seeders
-//==================================================
-
-const {importData} = require('./seeders/exhibitsSeeder');
-console.log(importData());
-
-
 
 //Placeholder routes for webpages
 app.get("/", (req, res) => {
   res.send("Welcome to Museum App");
+});
+
+//Server
+app.listen(port, () => {
+  console.log(`Server is listening on port: ${port}`);
 });
 
 //Server

@@ -1,18 +1,15 @@
 const mongoose = require('mongoose');
-
 module.exports = function () {
-  mongoose
-    .connect(process.env.DATABASE_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useFindAndModify: false,
-      useCreateIndex: true,
-    })
+  mongoose.connect(process.env.DATABASE_URL, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  })
     .then(() => {
-      console.log('MONGO CONNECTION OPEN!!!');
+      console.log('Mongo Connection Open!');
     })
     .catch((err) => {
-      console.log('MONGO CONNECTION ERROR!!!!');
-      console.log(err);
+      console.log('Mongo Connection Error!', err);
     });
 };
