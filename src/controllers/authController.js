@@ -40,7 +40,7 @@ exports.newUserSignup = (req, res) => {
                         jwt.sign({
                             id: newUser._id,
                             email: newUser.email,
-                            role: newUser.role
+                            dateOfBirth: newUser.dateOfBirth
                         }, secret, {expiresIn: expiry}, (err, token) => {
                             if (err) {
                                 return res.status(500).json({ err });
