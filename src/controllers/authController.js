@@ -61,12 +61,12 @@ exports.loginUser = (req, res) => {
             return res.status(500).json({ err });
         }
         if (!foundUser) {
-            return res.status(401).json({ message: 'Incorrect email' });
+            return res.status(401).json({ message: 'Incorrect email or password. Please try again.' });
         }
         let match = bcrypt.compareSync(req.body.password, foundUser.password);
 
         if (!match) {
-            return res.status(401).json({ message: 'Incorrect password' });
+            return res.status(401).json({ message: 'Incorrect email or password. Please try again.' });
         }
 
         jwt.sign({
