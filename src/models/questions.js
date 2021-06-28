@@ -1,24 +1,20 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-//Questions Schema
+//questions schema
 const questionSchema = new Schema({
-  title: {
-    type: String,
-    required: [true, 'Title required']
-  },
-  description: [String],
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
-  },
-  answer: String,
-  status: {
-    type: String,
-    enum: ['pending', 'answered', 'published'],
-    default: pending
-  }
+    title: {
+        type: String
+    },
+    description: [String],
+    user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    answer: String,
+    status: {
+        type: String,
+        enum: ['pending', 'answered', 'published']
+    }
 });
 
-//model
-const Question = mongoose.model('Question', questionSchema);
-module.exports = Question;
+module.exports = mongoose.model('Question', questionSchema);

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Questions</title>
+</head>
+<body>
+    <form action="/questions" method="POST">
+    <div>
+        <label for="title">Title</label>
+        <input type="text" id="title" name="question[title]">
+    </div>
+    <div>
+        <label for="description">Description</label>
+        <input type="text" id="description" name="question[description]">
+    </div>
+    <!-- <div>
+        <label for="user">User</label>
+        <input type="" id="user" name="question[user]">
+    </div> -->
+    <div>
+        <label for="answer">Answer</label>
+        <input type="text" id="answer" name="question[answer]">
+    </div>
+    <div>
+        <label for="status">Status</label>
+        <input type="text" id="status" name="question[status]">
+    </div>
+    <button>Add Question</button>
+    </form>
+    
+</body>
+</html>
