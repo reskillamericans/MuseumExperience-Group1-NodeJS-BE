@@ -17,7 +17,7 @@ const exhibits = JSON.parse(fs.readFileSync(`${__dirname}/exhibits.json`, "utf-8
 exports.importData = async () => {
    try {
         const foundExhibits = await ExhibitModel.find();
-        if (foundExhibits) {
+        if (foundExhibits.length > 0) {
            console.log("Data exists"); 
         } else {
             await ExhibitModel.create(exhibits);

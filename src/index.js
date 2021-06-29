@@ -1,4 +1,4 @@
-require("dotenv").config();
+require("dotenv").config({ path: '../.env'});
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
@@ -26,8 +26,8 @@ app.use('/auth', authRoutes);
 // Seeders
 //==================================================
 
-// const { importData } = require("./seeders/exhibitsSeeder");
-// console.log(importData());
+const { importData } = require("./seeders/exhibitsSeeder");
+console.log(importData());
 
 //Placeholder routes for webpages
 app.get("/", (req, res) => {
