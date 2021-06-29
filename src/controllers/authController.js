@@ -1,5 +1,5 @@
 const User = require('../models/users');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const secret = process.env.AUTHENTICATION_SECRET;
 const expiry = Number(process.env.EXPIRY);
@@ -41,7 +41,7 @@ exports.newUserSignup = (req, res) => {
                             id: newUser._id,
                             email: newUser.email,
                             dateOfBirth: newUser.dateOfBirth
-                        }, secret, {expiresIn: expiry}, (err, token) => {
+                        }, secret, { expiresIn: expiry }, (err, token) => {
                             if (err) {
                                 return res.status(500).json({ err });
                             }
