@@ -5,9 +5,6 @@ const QuizCtrl = require('../controllers/questionsController');
 //fetch questions
 router.get('/questions', QuizCtrl.fetchQuestions);
 
-//get route to serve the form for posting new questions
-router.get('/questions/new', QuizCtrl.fetchForm);
-
 // create a new question
 router.post('/questions', QuizCtrl.createQuestion);
 

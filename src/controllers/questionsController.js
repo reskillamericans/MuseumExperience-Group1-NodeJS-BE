@@ -1,4 +1,5 @@
 const Question = require('../models/questions');
+const AppError = require('../AppError');
 
 exports.fetchQuestions = async (req, res, next) => {
     try {
@@ -6,22 +7,18 @@ exports.fetchQuestions = async (req, res, next) => {
         if (!questions) {
             throw new AppError('Questions not found', 404);
         }
-        res.render('questions/index', { questions })
+        return res.status(200).json({ questions });
     } catch (err) {
         next(err)
     }
 }
 
-exports.fetchForm = (req, res) => {
-    res.render('questions/new')
-}
-
 exports.createQuestion = async (req, res, next) => {
     try {
-        const { title, description, user, answer, status } = req.body;
+        const { title, description, answer, status } = req.body;
         const question = new Question(req.body);
         await question.save();
-        res.redirect(`/questions/${question._id}`)
+        return res.status(200).json({question})
     } catch (err) {
         next(err)
     }
@@ -33,7 +30,7 @@ exports.fetchSingleQuestion = async (req, res, next) => {
         if (!question) {
             throw new AppError('Question not found', 404);
         }
-        res.render('questions/details', { question })
+        return res.status(200).json({question})
     } catch (err) {
         next(err)
     }
