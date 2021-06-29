@@ -1,4 +1,5 @@
-const Question = require('../models/questions')
+const Question = require('../models/questions');
+
 exports.fetchQuestions = async (req, res, next) => {
     try {
         const questions = await Question.find({});
@@ -17,7 +18,8 @@ exports.fetchForm = (req, res) => {
 
 exports.createQuestion = async (req, res, next) => {
     try {
-        const question = new Question(req.body.question)
+        const { title, description, user, answer, status } = req.body;
+        const question = new Question(req.body);
         await question.save();
         res.redirect(`/questions/${question._id}`)
     } catch (err) {
