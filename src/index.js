@@ -34,8 +34,8 @@ app.use(questionsRoutes);
 // Seeders
 //==================================================
 
-const { importData } = require("./seeders/exhibitsSeeder");
-console.log(importData());
+// const { importData } = require("./seeders/exhibitsSeeder");
+// console.log(importData());
 
 //Placeholder routes for webpages
 app.get("/", (req, res) => {
