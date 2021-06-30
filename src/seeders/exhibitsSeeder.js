@@ -15,10 +15,10 @@ const exhibits = JSON.parse(fs.readFileSync(`${__dirname}/exhibits.json`, "utf-8
 
 //Import data into DB
 exports.importData = async () => {
-   try {
+    try {
         const foundExhibits = await ExhibitModel.find();
         if (foundExhibits.length > 0) {
-           console.log("Data exists"); 
+            console.log("Data exists");
         } else {
             await ExhibitModel.create(exhibits);
             console.log("Data imported");
@@ -30,5 +30,5 @@ exports.importData = async () => {
 };
 
 if (process.argv[2] === "-i") {
-  importData().then();
+    importData().then();
 }
