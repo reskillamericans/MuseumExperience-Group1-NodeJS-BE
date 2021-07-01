@@ -22,7 +22,8 @@ const userSchema = new Schema({
     dateOfBirth: {
         type: Date,
         required: true
-    }
+    },
+    subscriptions: [{ type: Schema.Types.ObjectId, ref: 'Subscription' }]
 });
 
 module.exports = mongoose.model('User', userSchema);
