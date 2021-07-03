@@ -1,5 +1,5 @@
-const Subscription = require("./../models/subscription");
-const User = require("./../models/users")
+const Subscription = require('./../models/subscription');
+const User = require('./../models/users')
 const Exhibit = require('./../models/exhibit');
 
 // Exhibit subscription controller
@@ -12,13 +12,13 @@ exports.subscribeToExhibit = (req, res) => {
         if (err) {
             return res.status(500).json({ message: err });
         } else if (!req.body.exhibit) {
-            return res.status(404).json({ message: "Exhibit not found" });
+            return res.status(404).json({ message: 'Exhibit not found' });
         } else {
             newSubscription.save((err, savedSubscription) => {
                 if (err) {
                     return res.status(500).json({ message: err });
                 } else {
-                    return res.status(200).json({ message: "Subscription successfully saved", savedSubscription });
+                    return res.status(200).json({ message: 'Subscription successfully saved', savedSubscription });
                 }
             })
         }
@@ -46,17 +46,17 @@ exports.subscribeToExhibit = (req, res) => {
 exports.cancelSubscriptionToExhibit = (req, res) => {
     Subscription.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, subscription) => {
         if (err) {
-            return res.status(500).json({message: err});
+            return res.status(500).json({ message: err });
         } else if (!subscription) {
-            return res.status(404).json({message: 'Subscription not found'});
-        } else if (subscription.status == "active") {
+            return res.status(404).json({ message: 'Subscription not found' });
+        } else {
             subscription.save((err, savedSubscription) => {
                 if (err) {
-                    return res.status(500).json({message: err});
+                    return res.status(500).json({ message: err });
                 } else {
-                    return res.status(200).json({message: 'Subscription successfully cancelled!', savedSubscription});
+                    return res.status(200).json({ message: 'Subscription successfully cancelled!', subscription });
                 }
-            });
-        } 
+            })
+        }
     })
 }
