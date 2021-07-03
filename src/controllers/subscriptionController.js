@@ -11,11 +11,26 @@ exports.subscribeToExhibit = (req, res) => {
     }, (err, newSubscription) => {
         if (err) {
             return res.status(500).json({ message: err });
+        } else if (!req.body.exhibit) {
+            return res.status(404).json({ message: "Exhibit not found" });
         } else {
-            let conditions = {};
+            newSubscription.save((err, savedSubscription) => {
+                if (err) {
+                    return res.status(500).json({ message: err });
+                } else {
+                    return res.status(200).json({ message: "Subscription successfully saved", savedSubscription });
+                }
+            })
+        }
+    })
+}
+
+/* let conditions = {};
             if (req.query.id) {
                 conditions.id = req.query.id;
-            }
+*/
+
+/*
             User.findById(req.user.id, (err, user) => {
                 if (err) {
                     return res.status(500).json({ message: err });
@@ -25,29 +40,23 @@ exports.subscribeToExhibit = (req, res) => {
                     return res.status(200).json({ message: "User successfully subscribed to exhibit!", newSubscription }); 
                 }
             })
-        }
-    })
-}
+        }*/
 
-
-// Subscription cancellation contoller
+// Subscription cancellation controller
 exports.cancelSubscriptionToExhibit = (req, res) => {
     Subscription.findByIdAndUpdate(req.params.id, req.body, {new: true}, (err, subscription) => {
         if (err) {
             return res.status(500).json({message: err});
         } else if (!subscription) {
             return res.status(404).json({message: 'Subscription not found'});
-        } else {
+        } else if (subscription.status == "active") {
             subscription.save((err, savedSubscription) => {
                 if (err) {
-                    return res.status(400).json({message: err});
-                } else if (subscription.status === "cancelled") {
-                    return res.status(401).json({ message: "Subscription is already cancelled"})
+                    return res.status(500).json({message: err});
                 } else {
-                    return res.status(200).json({message: 'Subscription successfully cancelled!', subscription});
+                    return res.status(200).json({message: 'Subscription successfully cancelled!', savedSubscription});
                 }
             });
-        }
+        } 
     })
-    return null;
 }
