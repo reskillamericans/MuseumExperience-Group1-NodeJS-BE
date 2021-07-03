@@ -1,24 +1,40 @@
-const Subscription = require('./../models/subscription');
-const User = require('./../models/users')
-const Exhibit = require('./../models/exhibit');
+const Subscription = require('../models/subscription');
+const User = require('../models/users');
+const Exhibit = require('../models/exhibit');
 
 // Exhibit subscription controller
 exports.subscribeToExhibit = (req, res) => {
-    Subscription.create({
-        user: req.user.id,
-        exhibit: req.body.exhibit,
-        status: req.body.status
-    }, (err, newSubscription) => {
+    Exhibit.findById(req.body.exhibit, (err, exhibit) => {
         if (err) {
-            return res.status(500).json({ message: err });
-        } else if (!req.body.exhibit) {
             return res.status(404).json({ message: 'Exhibit not found' });
         } else {
-            newSubscription.save((err, savedSubscription) => {
+            Subscription.create({
+                user: req.user.id,
+                exhibit,
+                status: req.body.status
+            }, (err, newSubscription) => {
                 if (err) {
                     return res.status(500).json({ message: err });
                 } else {
-                    return res.status(200).json({ message: 'Subscription successfully saved', savedSubscription });
+                    User.findById(req.user.id, (err, user) => {
+                                if (err) {
+                                    return res.status(500).json({ message: err });
+                                } else {
+                                    if (user.subscriptions) {
+                                        user.subscriptions.push(newSubscription);
+                                    } else {
+                                        user.subscriptions = [newSubscription];
+                                    }
+                                    user.save((err, savedUser) => {
+                                        if (err) {
+                                            return res.status(500).json({ message: err });
+                                        } else {
+                                            return res.status(200).json({ message: 'User subscribed successfully!', user, savedSubscription});
+                                        }
+                                    });
+                                    
+                                }
+                    })
                 }
             })
         }

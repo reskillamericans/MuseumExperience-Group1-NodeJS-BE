@@ -18,4 +18,4 @@ const exhibitSchema = new mongoose.Schema({
   },
 });
 
-exports.ExhibitModel = mongoose.model("Exhibit", exhibitSchema);
+module.exports = mongoose.model("Exhibit", exhibitSchema);
