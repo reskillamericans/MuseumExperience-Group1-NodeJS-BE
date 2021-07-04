@@ -8,7 +8,7 @@ const subscriptionSchema = new Schema({
         type: String,
         enum:['active', 'cancelled'],
         default: 'active'
-    },
+    }
 });
 
 module.exports = mongoose.model('Subscription', subscriptionSchema);
