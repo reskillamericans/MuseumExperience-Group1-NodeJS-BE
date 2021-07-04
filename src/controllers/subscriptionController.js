@@ -10,8 +10,7 @@ exports.subscribeToExhibit = (req, res) => {
         } else {
             Subscription.create({
                 user: req.user.id,
-                exhibit,
-                status: req.body.status
+                exhibit
             }, (err, newSubscription) => {
                 if (err) {
                     return res.status(500).json({ message: err });
@@ -21,9 +20,9 @@ exports.subscribeToExhibit = (req, res) => {
                                     return res.status(500).json({ message: err });
                                 } else {
                                     if (user.subscriptions) {
-                                        user.subscriptions.push(newSubscription);
+                                        user.subscriptions.push(newSubscription._id);
                                     } else {
-                                        user.subscriptions = [newSubscription];
+                                        user.subscriptions = [newSubscription._id];
                                     }
                                     user.save((err, savedUser) => {
                                         if (err) {

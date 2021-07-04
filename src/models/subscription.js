@@ -6,7 +6,8 @@ const subscriptionSchema = new Schema({
     exhibit: { type: Schema.Types.ObjectId, ref: 'Exhibit' },
     status: {
         type: String,
-        enum:['active', 'cancelled']
+        enum:['active', 'cancelled'],
+        default: 'active'
     },
 });
 
