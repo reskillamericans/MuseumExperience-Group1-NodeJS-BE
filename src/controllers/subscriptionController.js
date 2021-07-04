@@ -16,14 +16,13 @@ exports.subscribeToExhibit = (req, res) => {
                     return res.status(500).json({ message: err });
                 } else {
                     User.findById(req.user.id, (err, user) => {
-
                         if (err) {
                             return res.status(500).json({ message: err });
                         } else {
                             if (user.subscriptions) {
-                                user.subscriptions.push(newSubscription.exhibit);
+                                user.subscriptions.push(newSubscription._id);
                             } else {
-                                user.subscriptions = [newSubscription.exhibit];
+                                user.subscriptions = [newSubscription._id];
                             }
 
                             user.save((err, savedUser) => {
@@ -45,22 +44,6 @@ exports.subscribeToExhibit = (req, res) => {
     })
 }
 
-/* let conditions = {};
-            if (req.query.id) {
-                conditions.id = req.query.id;
-*/
-
-/*
-            User.findById(req.user.id, (err, user) => {
-                if (err) {
-                    return res.status(500).json({ message: err });
-                } else {
-                    user.subscriptions.push(newSubscription.exhibit);
-                    console.log(user);
-                    return res.status(200).json({ message: "User successfully subscribed to exhibit!", newSubscription }); 
-                }
-            })
-        }*/
 
 // Subscription cancellation controller
 exports.cancelSubscriptionToExhibit = (req, res) => {
