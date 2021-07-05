@@ -14,7 +14,7 @@ router.get('/questions/:id', QuizCtrl.fetchSingleQuestion);
 //error handler
 router.use((err, req, res, next) => {
     const { status = 500, message = 'Sorry, something went wrong' } = err;
-    res.status(status).send(message);
-})
+    res.status(status).json(message);
+});
 
 module.exports = router;
