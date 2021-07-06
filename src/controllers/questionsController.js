@@ -1,4 +1,5 @@
 const Question = require('../models/questions');
+const Admin = require('../models/admin');
 const AppError = require('../AppError');
 
 exports.fetchQuestions = async (req, res, next) => {

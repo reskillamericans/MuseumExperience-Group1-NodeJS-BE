@@ -14,6 +14,10 @@ const questionSchema = new Schema({
     status: {
         type: String,
         enum: ['pending', 'answered', 'published']
+    },
+    admin: {
+        type: Schema.Types.ObjectId,
+        ref: 'Admin'
     }
 });
 

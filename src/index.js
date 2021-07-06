@@ -5,12 +5,16 @@ const app = express();
 const path = require('path');
 const Question = require('./models/questions');
 const AppError = require('./AppError');
+//new
+const Admin = require('./models/admin');
 app.use(express.urlencoded({extended: true}))
 app.set('views', path.join(__dirname, 'views'));
 
 const { exhibitRoutes } = require("./routes/exhibitRoutes");
 const questionsRoutes = require('./routes/questionsRoute')
 const authRoutes = require('./routes/authRoutes');
+//new
+const adminRoutes = require('./routes/adminRoutes');
 
 //Middleware
 app.use(express.json());
@@ -29,6 +33,8 @@ dbSetup();
 app.use(exhibitRoutes);
 app.use('/auth', authRoutes);
 app.use(questionsRoutes);
+//new
+app.use(adminRoutes);
 
 //==================================================
 // Seeders
