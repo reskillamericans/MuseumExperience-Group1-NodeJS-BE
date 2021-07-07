@@ -17,7 +17,7 @@ exports.fetchQuestions = async (req, res, next) => {
 
 exports.createQuestion = async (req, res, next) => {
     try {
-        const { title, description, answer } = req.body;
+        const { title, description } = req.body;
         const question = new Question(req.body);
         await question.save();
         const deliverQuestionTo = process.env.ADMIN_ADDRESS;
