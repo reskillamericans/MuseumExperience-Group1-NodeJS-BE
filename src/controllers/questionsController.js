@@ -1,5 +1,7 @@
 const Question = require('../models/questions');
 const AppError = require('../AppError');
+const emailService = require('../services/emailService');
+
 
 exports.fetchQuestions = async (req, res, next) => {
     try {
