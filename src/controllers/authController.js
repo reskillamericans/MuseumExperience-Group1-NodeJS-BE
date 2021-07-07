@@ -114,7 +114,7 @@ exports.emailVerification = async (req, res) => {
 
     if (moment(token.expiresIn) < moment()) {
       token.expired = true;
-      token.save();
+      await token.save();
 
       return res
         .status(401)
@@ -129,7 +129,7 @@ exports.emailVerification = async (req, res) => {
       return res.status(400).json({ message: "This account is already verified. Please log in." });
 
     user.emailVerified = true;
-    user.save();
+    await user.save();
 
     await TokenModel.updateMany({ userID: user._id }, { expired: true });
 
@@ -146,7 +146,8 @@ exports.resendEmailVerToken = async (req, res) => {
 
     if (!user) return res.status(400).json({ message: "We were unable to find a user with that email." });
 
-    if (user.isVerified) return res.status(403).json({ message: "This account is already verified. Please log in." });
+    if (user.emailVerified)
+      return res.status(403).json({ message: "This account is already verified. Please log in." });
 
     let newToken = await TokenModel.create({
       userID: user._id,
@@ -210,7 +211,7 @@ exports.passwordReset = async (req, res) => {
 
     if (moment(token.expiresIn) < moment()) {
       token.expired = true;
-      token.save();
+      await token.save();
 
       return res
         .status(401)
@@ -222,13 +223,13 @@ exports.passwordReset = async (req, res) => {
     if (!user) return res.status(500).json({ message: "Something went wrong. Please try again later" });
 
     token.expired = true;
-    token.save();
+    await token.save();
 
     let hashedPassword = bcrypt.hashSync(req.body.newPassword, 10);
 
     user.password = hashedPassword;
 
-    user.save();
+    await user.save();
 
     await TokenModel.updateMany({ userID: user._id }, { expired: true });
 
