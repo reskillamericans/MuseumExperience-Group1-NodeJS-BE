@@ -3,9 +3,9 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const secret = process.env.AUTHENTICATION_SECRET;
 const expiry = Number(process.env.EXPIRY);
-const { TokenModel } = require("./../models/tokens");
+const { TokenModel } = require("../models/tokens");
 const { v4: uuidv4 } = require("uuid");
-const sendEmail = require("./../services/emailService");
+const sendEmail = require("../services/emailService");
 const moment = require("moment");
 moment().format();
 
