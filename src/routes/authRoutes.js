@@ -8,13 +8,12 @@ const {
   passwordResetRequest,
   passwordReset,
 } = require("../controllers/authController");
-const { checkIfEmailVerified } = require("./../middlewares/authentication");
 
 router.post("/signup", newUserSignup);
 router.get("/verify/:token", emailVerification);
 router.post("/resend", resendEmailVerToken);
-router.post("/login", checkIfEmailVerified, loginUser);
-router.post("/recover", checkIfEmailVerified, passwordResetRequest);
+router.post("/login", loginUser);
+router.post("/recover", passwordResetRequest);
 router.post("/reset", passwordReset);
 
 module.exports = router;

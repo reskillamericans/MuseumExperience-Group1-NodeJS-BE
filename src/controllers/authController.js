@@ -5,7 +5,9 @@ const secret = process.env.AUTHENTICATION_SECRET;
 const expiry = Number(process.env.EXPIRY);
 const { TokenModel } = require("./../models/tokens");
 const { v4: uuidv4 } = require("uuid");
-const { sendEmailAuth } = require("./../services/emailService");
+const sendEmail = require("./../services/emailService");
+const moment = require("moment");
+moment().format();
 
 exports.newUserSignup = (req, res) => {
   User.findOne({ email: req.body.email }, (err, existingUser) => {
@@ -42,23 +44,21 @@ exports.newUserSignup = (req, res) => {
                 return res.status(500).json({ err });
               }
 
-              // create token
               TokenModel.create(
                 {
                   userID: savedUser._id,
-                  emailVerificationToken: uuidv4(),
+                  token: uuidv4(),
+                  expiresIn: moment().add(1, "hours"),
+                  tokenType: "email-verification",
                 },
                 (err, newToken) => {
                   if (err) return res.status(500).json({ err });
 
-                  // send verification email: fill out to, subject, message
-                  const messageConfig = {
-                    to: savedUser.email,
-                    subject: "Activate your Museum Experience Account Now",
-                    html: `<p>You're just one click away from getting started with Museum Experience. All you need to do is verify your email address to activate your Museum Experience account. Click <a href="http://localhost:${process.env.PORT}/auth/verify/${newToken.emailVerificationToken}">here</a></p>`,
-                  };
+                  const to = savedUser.email;
+                  const subject = "Activate your Museum Experience Account Now";
+                  const html = `<p>You're just one click away from getting started with Museum Experience. All you need to do is verify your email address to activate your Museum Experience account. Click <a href="http://localhost:${process.env.PORT}/auth/verify/${newToken.token}">here</a></p>`;
 
-                  sendEmailAuth(messageConfig);
+                  sendEmail(to, subject, html);
 
                   return res.status(200).json({ message: `A verification email has been sent to ${newUser.email}.` });
                 }
@@ -105,14 +105,23 @@ exports.loginUser = (req, res) => {
 
 exports.emailVerification = async (req, res) => {
   try {
-    let matchedToken = await TokenModel.findOne({ emailVerificationToken: req.params.token });
+    let token = await TokenModel.findOne({ token: req.params.token });
 
-    if (!matchedToken)
+    if (token.expired)
       return res
         .status(401)
         .json({ message: "Token may be expired. If you can't login, please request another token." });
 
-    let user = await User.findOne({ _id: matchedToken.userID });
+    if (moment(token.expiresIn) < moment()) {
+      token.expired = true;
+      token.save();
+
+      return res
+        .status(401)
+        .json({ message: "Token may be expired. If you can't login, please request another token." });
+    }
+
+    let user = await User.findOne({ _id: token.userID });
 
     if (!user) return res.status(400).json({ message: "Could not find a user with this token." });
 
@@ -121,6 +130,8 @@ exports.emailVerification = async (req, res) => {
 
     user.emailVerified = true;
     user.save();
+
+    await TokenModel.updateMany({ userID: user._id }, { expired: true });
 
     return res.status(200).json({ message: "You account has been verified! Please log in." });
   } catch (err) {
@@ -137,22 +148,18 @@ exports.resendEmailVerToken = async (req, res) => {
 
     if (user.isVerified) return res.status(403).json({ message: "This account is already verified. Please log in." });
 
-    let oldToken = await TokenModel.findOne({ userID: user._id });
-
-    if (oldToken) await oldToken.deleteOne();
-
     let newToken = await TokenModel.create({
       userID: user._id,
-      emailVerificationToken: uuidv4(),
+      token: uuidv4(),
+      expiresIn: moment().add(1, "hours"),
+      tokenType: "email-verification",
     });
 
-    const messageConfig = {
-      to: user.email,
-      subject: "Activate your Museum Experience Account Now",
-      html: `<p>You're just one click away from getting started with Museum Experience. All you need to do is verify your email address to activate your Museum Experience account. Click <a href="http://localhost:${process.env.PORT}/auth/verify/${newToken.emailVerificationToken}">here</a></p>`,
-    };
+    const to = user.email;
+    const subject = "Activate your Museum Experience Account Now";
+    const html = `<p>You're just one click away from getting started with Museum Experience. All you need to do is verify your email address to activate your Museum Experience account. Click <a href="http://localhost:${process.env.PORT}/auth/verify/${newToken.token}">here</a></p>`;
 
-    sendEmailAuth(messageConfig);
+    sendEmail(to, subject, html);
 
     res.status(200).json({ message: `A verification email has been sent to ${user.email}.` });
   } catch (err) {
@@ -165,24 +172,22 @@ exports.passwordResetRequest = async (req, res) => {
   try {
     let user = await User.findOne({ email: req.body.email });
 
-    let oldToken = await TokenModel.findOne({ userID: user._id });
-
-    if (oldToken) await oldToken.deleteOne();
-
-    TokenModel.create({
+    let token = await TokenModel.create({
       userID: user._id,
-      passwordResetToken: uuidv4(),
+      token: uuidv4(),
+      expiresIn: moment().add(1, "hours"),
+      tokenType: "password-reset",
     });
 
-    const messageConfig = {
-      to: user.email,
-      subject: "Forgot your password?",
-      html: `<p>Click <a href="#">here</a> to reset your password.</p>`,
-    };
+    const to = user.email;
+    const subject = "Forgot your password?";
+    const html = `<p>Click <a href="reset-form-with-token">here</a> to reset your password.</p>`;
 
-    sendEmailAuth(messageConfig);
+    sendEmail(to, subject, html);
 
-    return res.status(200).json({ message: `An email has been sent to ${user.email} with further instructions.` });
+    return res
+      .status(200)
+      .json({ message: `An email has been sent to ${user.email} with further instructions.`, token: token.token });
   } catch (err) {
     console.log(err);
     if (err) return res.status(500).json({ message: "Something went wrong. Please try again later" });
@@ -191,12 +196,33 @@ exports.passwordResetRequest = async (req, res) => {
 
 exports.passwordReset = async (req, res) => {
   try {
-    let user = await User.findOne({ email: req.body.email });
+    let token = await TokenModel.findOne({ token: req.body.token });
 
-    let passwordResetToken = TokenModel.findOne({ userID: user._id });
+    if (!token)
+      return res
+        .status(401)
+        .json({ message: "Token may be expired. If you can't login, please request another token." });
 
-    if (!passwordResetToken)
-      return res.status(401).json({ message: "Token may be expired. Please request another password reset token." });
+    if (token.expired)
+      return res
+        .status(401)
+        .json({ message: "Token may be expired. If you can't login, please request another token." });
+
+    if (moment(token.expiresIn) < moment()) {
+      token.expired = true;
+      token.save();
+
+      return res
+        .status(401)
+        .json({ message: "Token may be expired. If you can't login, please request another token." });
+    }
+
+    let user = await User.findOne({ _id: token.userID });
+
+    if (!user) return res.status(500).json({ message: "Something went wrong. Please try again later" });
+
+    token.expired = true;
+    token.save();
 
     let hashedPassword = bcrypt.hashSync(req.body.newPassword, 10);
 
@@ -204,17 +230,15 @@ exports.passwordReset = async (req, res) => {
 
     user.save();
 
-    passwordResetToken.deleteOne();
+    await TokenModel.updateMany({ userID: user._id }, { expired: true });
 
-    const messageConfig = {
-      to: user.email,
-      subject: "Password updated",
-      html: `<p>Your password has been updated. Please login.</p>`,
-    };
+    const to = user.email;
+    const subject = "Password updated";
+    const html = `<p>Your password has been updated. Please login.</p>`;
 
-    sendEmailAuth(messageConfig);
+    sendEmail(to, subject, html);
 
-    res.status(200).json({ message: "Password updated." });
+    res.status(200).json({ message: "Password updated. Please login." });
   } catch (err) {
     console.log(err);
     if (err) return res.status(500).json({ message: "Something went wrong. Please try again later" });

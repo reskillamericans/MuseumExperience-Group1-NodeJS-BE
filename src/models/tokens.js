@@ -6,17 +6,18 @@ const tokenSchema = new mongoose.Schema({
     required: true,
     ref: "User",
   },
-  emailVerificationToken: {
-    type: String,
+  expired: {
+    type: Boolean,
+    default: false,
   },
-  passwordResetToken: {
-    type: String,
-  },
-  createdAt: {
+  expiresIn: {
     type: Date,
-    required: true,
-    default: Date.now,
-    expires: 3600,
+  },
+  token: {
+    type: String,
+  },
+  tokenType: {
+    type: String,
   },
 });
 

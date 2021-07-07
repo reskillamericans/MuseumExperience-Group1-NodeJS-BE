@@ -31,7 +31,7 @@ exports.authenticateUser = (req, res, next) => {
 
 exports.checkIfEmailVerified = async (req, res, next) => {
   try {
-    const user = await User.findOne({ email: req.body.email });
+    const user = await User.findOne({ _id: req.user.id });
 
     if (!user.emailVerified) return res.status(401).json({ message: "Your account has not been verified." });
   } catch (err) {
