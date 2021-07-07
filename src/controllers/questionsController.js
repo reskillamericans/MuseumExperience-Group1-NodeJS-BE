@@ -15,7 +15,7 @@ exports.fetchQuestions = async (req, res, next) => {
 
 exports.createQuestion = async (req, res, next) => {
     try {
-        const { title, description, answer, status } = req.body;
+        const { title, description, answer } = req.body;
         const question = new Question(req.body);
         await question.save();
         return res.status(200).json({question})
