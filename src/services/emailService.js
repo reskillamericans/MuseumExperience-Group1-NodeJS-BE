@@ -28,7 +28,6 @@ const sendEmail = function (to, subject, message, from) {
 };
 
 exports.sendEmailAuth = function (messageConfig) {
-  return console.log(messageConfig);
   transporter.sendMail(
     {
       from: process.env.SENDER_ADDRESS,
