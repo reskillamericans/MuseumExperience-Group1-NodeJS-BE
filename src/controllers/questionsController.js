@@ -1,6 +1,6 @@
 const Question = require('../models/questions');
-const Admin = require('../models/admin');
 const AppError = require('../AppError');
+const AdminMail = process.env.EMAIL_ADDRESS;
 
 exports.fetchQuestions = async (req, res, next) => {
     try {
@@ -12,18 +12,19 @@ exports.fetchQuestions = async (req, res, next) => {
     } catch (err) {
         next(err)
     }
-}
+};
 
 exports.createQuestion = async (req, res, next) => {
     try {
-        const { title, description, answer, status } = req.body;
+        const { title, description, answer } = req.body;
         const question = new Question(req.body);
+        AdminMail.question.push(question)
         await question.save();
-        return res.status(200).json({question})
+        return res.status(200).json({ question })
     } catch (err) {
         next(err)
     }
-}
+};
 
 exports.fetchSingleQuestion = async (req, res, next) => {
     try {
@@ -31,9 +32,9 @@ exports.fetchSingleQuestion = async (req, res, next) => {
         if (!question) {
             throw new AppError('Question not found', 404);
         }
-        return res.status(200).json({question})
+        return res.status(200).json({ question })
     } catch (err) {
         next(err)
     }
-}
+};
 

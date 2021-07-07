@@ -2,29 +2,15 @@ require("dotenv").config();
 const port = process.env.PORT;
 const express = require('express');
 const app = express();
-const path = require('path');
-const Question = require('./models/questions');
-const AppError = require('./AppError');
-//new
-const Admin = require('./models/admin');
-app.use(express.urlencoded({extended: true}))
-app.set('views', path.join(__dirname, 'views'));
 
 const { exhibitRoutes } = require("./routes/exhibitRoutes");
 const questionsRoutes = require('./routes/questionsRoute')
 const authRoutes = require('./routes/authRoutes');
-//new
-const adminRoutes = require('./routes/adminRoutes');
-
-//Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
 //==================================================
 // DATABASE
 //==================================================
 const dbSetup = require("./database/setup");
-
 dbSetup();
 
 //==================================================
@@ -33,8 +19,6 @@ dbSetup();
 app.use(exhibitRoutes);
 app.use('/auth', authRoutes);
 app.use(questionsRoutes);
-//new
-app.use(adminRoutes);
 
 //==================================================
 // Seeders
@@ -46,6 +30,15 @@ console.log(importData());
 //Placeholder routes for webpages
 app.get("/", (req, res) => {
   res.send("Welcome to Museum App");
+});
+
+//Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+//error handler middleware
+app.use((err, req, res, next) => {
+  const { status = 500, message = 'Sorry, something went wrong' } = err;
+  res.status(status).json(message);
 });
 
 //Server

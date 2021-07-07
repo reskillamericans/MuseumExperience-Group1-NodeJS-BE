@@ -11,10 +11,4 @@ router.post('/questions', QuizCtrl.createQuestion);
 //fetch details about a single question
 router.get('/questions/:id', QuizCtrl.fetchSingleQuestion);
 
-//error handler
-router.use((err, req, res, next) => {
-    const { status = 500, message = 'Sorry, something went wrong' } = err;
-    res.status(status).json(message);
-});
-
 module.exports = router;

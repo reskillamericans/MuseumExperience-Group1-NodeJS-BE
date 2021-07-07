@@ -10,15 +10,7 @@ const questionSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    answer: String,
-    status: {
-        type: String,
-        enum: ['pending', 'answered', 'published']
-    },
-    admin: {
-        type: Schema.Types.ObjectId,
-        ref: 'Admin'
-    }
+    answer: String
 });
 
 module.exports = mongoose.model('Question', questionSchema);
