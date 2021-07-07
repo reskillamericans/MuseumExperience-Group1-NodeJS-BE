@@ -52,7 +52,7 @@ exports.cancelSubscriptionToExhibit = (req, res) => {
     if (!status) {
         return res.status(400).json({ message: 'Status value must be included to update subscription status'});
     }
-    Subscription.findByIdAndUpdate(subscriptionId, status, {new: true}, (err, subscription) => {
+    Subscription.findByIdAndUpdate(subscriptionId, {status}, {new: true}, (err, subscription) => {
         if (err) {
             return res.status(500).json({ message: err });
         } else if (!subscription) {
