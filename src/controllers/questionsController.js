@@ -20,6 +20,8 @@ exports.createQuestion = async (req, res, next) => {
         const { title, description, answer, status } = req.body;
         const question = new Question(req.body);
         await question.save();
+        const deliverQuestionTo = 'admin@museumexperience.com';
+        emailService.sendEmail(deliverQuestionTo, req.body.title, req.body.description, process.env.SENDER_ADDRESS);
         return res.status(200).json({question})
     } catch (err) {
         next(err)
