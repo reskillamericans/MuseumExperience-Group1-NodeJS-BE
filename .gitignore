@@ -99,3 +99,6 @@ package-lock.json
 .yarn/install-state.gz
 .pnp.*
 .idea
+
+# VSCode settings folder
+.vscode
