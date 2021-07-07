@@ -20,9 +20,9 @@ const userSchema = new Schema({
         required: true
     },
     dateOfBirth: {
-        type: Date,
-        required: true
-    }
+        type: Date
+    },
+    subscriptions: [{ type: Schema.Types.ObjectId, ref: 'Subscription' }]
 });
 
 module.exports = mongoose.model('User', userSchema);

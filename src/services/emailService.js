@@ -9,7 +9,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-const sendEmail = function (to, subject, message, from) {
+function sendEmail(to, subject, message, from) {
     transporter.sendMail({
     from: process.env.SENDER_ADDRESS, 
     to: to,
@@ -22,7 +22,9 @@ const sendEmail = function (to, subject, message, from) {
             console.log('Email sent!');
         }
     })
-};
+}
+
+module.exports = sendEmail;
 
 
 
