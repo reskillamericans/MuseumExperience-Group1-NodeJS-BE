@@ -1,6 +1,6 @@
 const Question = require('../models/questions');
 const AppError = require('../AppError');
-const emailService = require('../services/emailService');
+const sendEmail = require('../services/emailService');
 
 
 exports.fetchQuestions = async (req, res, next) => {
@@ -17,11 +17,11 @@ exports.fetchQuestions = async (req, res, next) => {
 
 exports.createQuestion = async (req, res, next) => {
     try {
-        const { title, description } = req.body;
+        const { title, description, answer } = req.body;
         const question = new Question(req.body);
         await question.save();
         const deliverQuestionTo = process.env.ADMIN_ADDRESS;
-        emailService.sendEmail(deliverQuestionTo, title, description, process.env.SENDER_ADDRESS);
+        sendEmail(deliverQuestionTo, title, description, process.env.SENDER_ADDRESS);
         return res.status(200).json({question})
     } catch (err) {
         next(err)
