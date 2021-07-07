@@ -9,13 +9,13 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-module.exports = function (to, subject, message, from) {
+function sendEmail(to, subject, message, from) {
   transporter.sendMail(
     {
       from: process.env.SENDER_ADDRESS,
       to: to,
       subject: subject,
-      html: message,
+      message: message,
     },
     (error, data) => {
       if (error) {
@@ -25,4 +25,6 @@ module.exports = function (to, subject, message, from) {
       }
     }
   );
-};
+}
+
+module.exports = sendEmail;

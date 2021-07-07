@@ -30,6 +30,7 @@ const userSchema = new Schema({
     type: Boolean,
     default: "false",
   },
+  subscriptions: [{ type: Schema.Types.ObjectId, ref: "Subscription" }],
 });
 
 module.exports = mongoose.model("User", userSchema);
