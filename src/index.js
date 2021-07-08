@@ -2,14 +2,10 @@ require("dotenv").config();
 const port = process.env.PORT;
 const express = require("express");
 const app = express();
-const path = require("path");
-const Question = require("./models/questions");
-const AppError = require("./AppError");
-app.use(express.urlencoded({ extended: true }));
-app.set("views", path.join(__dirname, "views"));
 
 const { exhibitRoutes } = require("./routes/exhibitRoutes");
 const questionsRoutes = require("./routes/questionsRoute");
+const commentsRoutes = require('./routes/commentsRoute');
 const authRoutes = require("./routes/authRoutes");
 
 //==================================================
@@ -24,6 +20,7 @@ dbSetup();
 app.use(exhibitRoutes);
 app.use("/auth", authRoutes);
 app.use(questionsRoutes);
+app.use(commentsRoutes)
 
 //==================================================
 // Seeders
