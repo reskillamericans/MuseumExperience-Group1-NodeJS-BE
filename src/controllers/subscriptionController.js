@@ -48,11 +48,12 @@ exports.subscribeToExhibit = (req, res) => {
 // Subscription cancellation controller
 exports.cancelSubscriptionToExhibit = (req, res) => {
     let subscriptionId = req.params.id;
-    let status = req.body.status;
-    if (!status) {
+    if (!req.body.status) {
         return res.status(400).json({ message: 'Status value must be included to update subscription status'});
     }
-    Subscription.findByIdAndUpdate(subscriptionId, {status}, {new: true}, (err, subscription) => {
+    Subscription.findById(subscriptionId, (err, subscription) => {
+        console.log(subscriptionId);
+        console.log(subscription.status);
         if (err) {
             return res.status(500).json({ message: err });
         } else if (!subscription) {
@@ -60,11 +61,12 @@ exports.cancelSubscriptionToExhibit = (req, res) => {
         } else if (subscription.status === 'cancelled') {
             return res.status(400).json({ message: 'Subscription has already been cancelled for this exhibit'});
         } else {
+            subscription.status = 'cancelled';
             subscription.save((err, savedSubscription) => {
                 if (err) {
                     return res.status(500).json({ message: err });
                 } else {
-                    return res.status(200).json({ message: 'Subscription successfully cancelled!', subscription });
+                    return res.status(200).json({ message: 'Subscription successfully cancelled!', savedSubscription });
                 }
             })
         }
