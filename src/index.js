@@ -37,7 +37,7 @@ app.get("/", (req, res) => {
 //Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-//error handler middleware
+//error handler utility
 app.use((err, req, res, next) => {
   const { status = 500, message = 'Sorry, something went wrong' } = err;
   res.status(status).json(message);
