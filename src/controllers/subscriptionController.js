@@ -63,3 +63,23 @@ exports.cancelSubscriptionToExhibit = (req, res) => {
         }
     })
 }
+
+exports.fetchSubscribedExhibits = (req, res) => {
+    Subscription.find({}, (err, exhibits) => {
+        if (err) {
+            return res.status(500).json({message: err});
+        } else {
+            return res.status(200).json({exhibits});
+        }
+    })
+}
+
+exports.deleteSubscribedExhibits = (req, res) => {
+    Subscription.deleteMany({status: 'cancelled'}, (err, exhibits) => {
+        if (err) {
+            return res.status(500).json({message: err})
+        } else {
+            return res.status(200).json({message: `exhibits deleted successfully`})
+        }
+    })
+}
