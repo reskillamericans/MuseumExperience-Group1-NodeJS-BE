@@ -59,7 +59,7 @@ exports.cancelSubscriptionToExhibit = (req, res) => {
         } else if (subscription.status === 'cancelled') {
             return res.status(400).json({ message: 'Subscription has already been cancelled for this exhibit'});
         } else {
-            subscription.status = 'cancelled';
+            subscription.status = req.body.status;
             subscription.save((err, savedSubscription) => {
                 if (err) {
                     return res.status(500).json({ message: err });
