@@ -1,7 +1,7 @@
 const Question = require('../models/questions');
 const AppError = require('../AppError');
 const sendEmail = require('../services/emailService');
-
+const bcrypt = require('bcrypt');
 
 exports.fetchQuestions = async (req, res, next) => {
     try {
