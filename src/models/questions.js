@@ -9,11 +9,6 @@ const questionSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    },
-    answer: String,
-    status: {
-        type: String,
-        enum: ['pending', 'answered', 'published']
     }
 });
 
