@@ -19,8 +19,8 @@ exports.createQuestion = async (req, res, next) => {
     try {
         // check if user is logged in before sending questions
         const { email, password } = req.body;
-        const user = await User.findOne({ email });
-        const validPassword = await bcrypt.compare(password, user.password);
+        const foundUser = await User.findOne({ email });
+        const validPassword = await bcrypt.compare(password, foundUser.password);
         if (validPassword) {
             //create question, save in the db and send to admin email
             const { title, description } = req.body;
