@@ -9,8 +9,7 @@ const questionSchema = new Schema({
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
-    },
-    answer: String
+    }
 });
 
 module.exports = mongoose.model('Question', questionSchema);

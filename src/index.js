@@ -3,6 +3,10 @@ const port = process.env.PORT;
 const express = require("express");
 const app = express();
 
+//Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 const { exhibitRoutes } = require("./routes/exhibitRoutes");
 const questionsRoutes = require("./routes/questionsRoute");
 const commentsRoutes = require('./routes/commentsRoute');
@@ -34,9 +38,6 @@ app.get("/", (req, res) => {
   res.send("Welcome to Museum App");
 });
 
-//Middleware
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 //error handler utility
 app.use((err, req, res, next) => {
   const { status = 500, message = 'Sorry, something went wrong' } = err;
