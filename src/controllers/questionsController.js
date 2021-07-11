@@ -17,7 +17,7 @@ exports.fetchQuestions = async (req, res, next) => {
 
 exports.createQuestion = async (req, res, next) => {
     try {
-        // confirm if user is logged in before sending questions
+        // check if user is logged in before sending questions
         const { email, password } = req.body;
         const user = await User.findOne({ email });
         const validPassword = await bcrypt.compare(password, user.password);
