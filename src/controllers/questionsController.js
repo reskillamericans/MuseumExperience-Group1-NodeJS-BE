@@ -1,7 +1,8 @@
 const Question = require('../models/questions');
 const AppError = require('../AppError');
 const sendEmail = require('../services/emailService');
-const bcrypt = require('bcrypt');
+const { requireLogin } = require('../middlewares/requireLogin')
+
 
 exports.fetchQuestions = async (req, res, next) => {
     try {
@@ -15,22 +16,15 @@ exports.fetchQuestions = async (req, res, next) => {
     }
 };
 
-exports.createQuestion = async (req, res, next) => {
+exports.createQuestion = requireLogin, async (req, res, next) => {
     try {
-        // check if user is logged in before sending questions
-        const { email, password } = req.body;
-        const foundUser = await User.findOne({ email });
-        const validPassword = await bcrypt.compare(password, foundUser.password);
-        if (validPassword) {
-            //create question, save in the db and send to admin email
-            const { title, description } = req.body;
-            const question = new Question(req.body);
-            await question.save();
-            const deliverQuestionTo = process.env.ADMIN_ADDRESS;
-            sendEmail(deliverQuestionTo, title, description, process.env.SENDER_ADDRESS);
-            return res.status(200).json({ question })
-      }
-        } catch (err) {
+        const { title, description } = req.body;
+        const question = new Question(req.body);
+        await question.save();
+        const deliverQuestionTo = process.env.ADMIN_ADDRESS;
+        sendEmail(deliverQuestionTo, title, description, process.env.SENDER_ADDRESS);
+        return res.status(200).json({ question })
+      }catch (err) {
         next(err)
     }
 };
