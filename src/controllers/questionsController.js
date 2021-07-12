@@ -1,8 +1,6 @@
 const Question = require('../models/questions');
 const AppError = require('../AppError');
 const sendEmail = require('../services/emailService');
-const { requireLogin } = require('../middlewares/requireLogin')
-
 
 exports.fetchQuestions = async (req, res, next) => {
     try {
@@ -16,7 +14,7 @@ exports.fetchQuestions = async (req, res, next) => {
     }
 };
 
-exports.createQuestion = requireLogin, async (req, res, next) => {
+exports.createQuestion = async (req, res, next) => {
     try {
         const { title, description } = req.body;
         const question = new Question(req.body);
