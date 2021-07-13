@@ -2,7 +2,6 @@ const Question = require('../models/questions');
 const AppError = require('../AppError');
 const sendEmail = require('../services/emailService');
 
-
 exports.fetchQuestions = async (req, res, next) => {
     try {
         const questions = await Question.find({});
@@ -13,7 +12,7 @@ exports.fetchQuestions = async (req, res, next) => {
     } catch (err) {
         next(err)
     }
-}
+};
 
 exports.createQuestion = async (req, res, next) => {
     try {
@@ -22,11 +21,11 @@ exports.createQuestion = async (req, res, next) => {
         await question.save();
         const deliverQuestionTo = process.env.ADMIN_ADDRESS;
         sendEmail(deliverQuestionTo, title, description, process.env.SENDER_ADDRESS);
-        return res.status(200).json({question})
-    } catch (err) {
+        return res.status(200).json({ question })
+      }catch (err) {
         next(err)
     }
-}
+};
 
 exports.fetchSingleQuestion = async (req, res, next) => {
     try {
@@ -34,9 +33,9 @@ exports.fetchSingleQuestion = async (req, res, next) => {
         if (!question) {
             throw new AppError('Question not found', 404);
         }
-        return res.status(200).json({question})
+        return res.status(200).json({ question })
     } catch (err) {
         next(err)
     }
-}
+};
 
