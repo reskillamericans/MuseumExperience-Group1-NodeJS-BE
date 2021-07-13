@@ -15,7 +15,7 @@ function sendEmail(to, subject, message, from) {
       from: process.env.SENDER_ADDRESS,
       to: to,
       subject: subject,
-      message: message,
+      html: message,
     },
     (error, data) => {
       if (error) {
