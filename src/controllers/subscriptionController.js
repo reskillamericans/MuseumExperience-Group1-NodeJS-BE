@@ -51,7 +51,7 @@ exports.cancelSubscriptionToExhibit = (req, res) => {
     if (!req.body.status) {
         return res.status(400).json({ message: 'Status value must be included to update subscription status'});
     }
-    Subscription.findById(subscriptionId, (err, subscription) => {
+    Subscription.findById(subscriptionId).populate('user').exec(function (err, subscription) {
         if (err) {
             return res.status(500).json({ message: err });
         } else if (!subscription) {
@@ -64,7 +64,15 @@ exports.cancelSubscriptionToExhibit = (req, res) => {
                 if (err) {
                     return res.status(500).json({ message: err });
                 } else {
-                    return res.status(200).json({ message: 'Subscription successfully cancelled!', savedSubscription });
+                    let user = savedSubscription.user;
+                    user.subscriptions.pull(subscription._id);
+                    user.save((err, removedSubscription) => {
+                        if (err) {
+                            return res.status(500).json({message: err});
+                        } else {
+                            return res.status(200).json({message: 'Subscription successfully cancelled and removed!', savedSubscription, removedSubscription})
+                        }
+                    })
                 }
             })
         }
@@ -72,21 +80,11 @@ exports.cancelSubscriptionToExhibit = (req, res) => {
 }
 
 exports.fetchSubscribedExhibits = (req, res) => {
-    Subscription.find({}, (err, exhibits) => {
+    Subscription.find({status: 'active'}, (err, exhibits) => {
         if (err) {
             return res.status(500).json({message: err});
         } else {
             return res.status(200).json({exhibits});
-        }
-    })
-}
-
-exports.deleteSubscribedExhibits = (req, res) => {
-    Subscription.deleteMany({status: 'cancelled'}, (err, exhibits) => {
-        if (err) {
-            return res.status(500).json({message: err})
-        } else {
-            return res.status(200).json({message: `exhibits deleted successfully`})
         }
     })
 }
