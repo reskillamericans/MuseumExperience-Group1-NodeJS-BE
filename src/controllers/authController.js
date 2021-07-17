@@ -87,6 +87,8 @@ exports.loginUser = (req, res) => {
 
     jwt.sign(
       {
+        firstName: foundUser.firstName,
+        lastName: foundUser.lastName,
         id: foundUser._id,
         email: foundUser.email,
         dateOfBirth: foundUser.dateOfBirth,
@@ -133,7 +135,7 @@ exports.emailVerification = async (req, res) => {
 
     await TokenModel.updateMany({ userID: user._id }, { expired: true });
 
-    return res.status(200).json({ message: "You account has been verified! Please log in." });
+    return res.status(200).json({ message: "Your account has been verified! Please log in." });
   } catch (err) {
     console.log(err);
     if (err) return res.status(500).json({ message: "Something went wrong. Please try again later" });
