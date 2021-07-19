@@ -4,10 +4,11 @@ const sendEmail = require("../services/emailService");
 
 exports.fetchQuestions = async (req, res, next) => {
   try {
-    const questions = await Question.find({});
-    if (!questions) {
-      throw new AppError("Questions not found", 404);
+    let filter = {};
+    if (req.query.exhibit) {
+      filter.exhibit = req.query.exhibit
     }
+    const questions = await Question.find(filter);
     return res.status(200).json({ questions });
   } catch (err) {
     next(err);
