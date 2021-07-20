@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon",
+    "start": "node src/index.js",
     "dev": "nodemon",
     "prod": "NODE_ENV=production nodemon"
   },
