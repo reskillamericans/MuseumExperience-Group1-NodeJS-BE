@@ -23,8 +23,7 @@ const userSchema = new Schema({
     required: true,
   },
   dateOfBirth: {
-    type: Date,
-    required: true,
+    type: Date
   },
   emailVerified: {
     type: Boolean,
